@@ -36,7 +36,7 @@ Then, open the .env file and configure the following variables:
 Example configuration for MySQL:
 
 
-### 3.1 Database Variables
+### 3.1 Database Variables  (copy paste)
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -46,51 +46,23 @@ DB_USERNAME=root
 DB_PASSWORD=
 
 
-### 3.2 Swagger variables (for documentation)
+### 3.2 Swagger variables (copy paste)
 
 L5_SWAGGER_USE_ABSOLUTE_PATH=true
-
 L5_SWAGGER_BASE_PATH=/api
-
 L5_SWAGGER_GENERATE_ALWAYS=true
-
 L5_SWAGGER_CONST_HOST=http://localhost:8000  
-
-
 L5_SWAGGER_UI_DISPLAY=true
-
-
 L5_SWAGGER_UI_DOCS_PATH=docs
-
-
 L5_SWAGGER_USE_ABSOLUTE_PATH=true
-
-
 L5_SWAGGER_UI_ASSETS_PATH=vendor/swagger-api/swagger-ui/dist/
-
-
 L5_FORMAT_TO_USE_FOR_DOCS=json
-
-
 L5_SWAGGER_GENERATE_ALWAYS=false
-
-
 L5_SWAGGER_GENERATE_YAML_COPY=false
-
-
 L5_SWAGGER_UI_DARK_MODE=false
-
-
 L5_SWAGGER_UI_DOC_EXPANSION=none
-
-
 L5_SWAGGER_UI_FILTERS=true
-
-
 L5_SWAGGER_UI_PERSIST_AUTHORIZATION=false
-
-
-
 
 
 
@@ -100,7 +72,6 @@ L5_SWAGGER_UI_PERSIST_AUTHORIZATION=false
 Laravel needs a unique application key. Generate this key by running:
 
 php artisan key:generate
-
 
 
 ### 5. Run Database Migrations
@@ -114,15 +85,11 @@ php artisan migrate
 To generate API documentation, ensure that the L5-Swagger package is installed. If it's not installed yet, run the following command:
 
 
+
 composer require "darkaonline/l5-swagger"
 
 
-
-
-
-
 php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider"
-
 
 
 
@@ -187,10 +154,8 @@ Cancel Investment: DELETE /api/investments/{id}
 
 ### 10.Documentation
 
-You can find the full API documentation at 
+You can find the full API documentation at: 
 
 http://127.0.0.1:8000/docs  (JUST JSON FILE)
 
 http://127.0.0.1:8000/api/documentation   (UI)
-
-
