@@ -1,0 +1,680 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Base Controller",
+        "description": "Controller for basic functionality, such as validation and authorization.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/api/campaigns": {
+            "get": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "List all campaigns (paginated)",
+                "operationId": "abf2552180345bbac2be4420cde9aad2",
+                "responses": {
+                    "200": {
+                        "description": "Campaign list retrieved"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Create a new campaign",
+                "operationId": "7658d401faad3d17f624722c1d17e899",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "amount",
+                                    "contract_fee",
+                                    "interest_rate",
+                                    "campaign_type",
+                                    "deadline",
+                                    "loan_duration"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "My Campaign"
+                                    },
+                                    "amount": {
+                                        "type": "integer",
+                                        "example": 1000
+                                    },
+                                    "contract_fee": {
+                                        "type": "integer",
+                                        "example": 100
+                                    },
+                                    "interest_rate": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 5.5
+                                    },
+                                    "campaign_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "normal",
+                                            "auction"
+                                        ]
+                                    },
+                                    "deadline": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-06-30"
+                                    },
+                                    "loan_duration": {
+                                        "type": "integer",
+                                        "example": 12
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Campaign created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/campaigns/{id}": {
+            "get": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Get campaign details",
+                "operationId": "feb49ed63db04e9b18ab01a36b2750e4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Campaign ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campaign found"
+                    },
+                    "404": {
+                        "description": "Campaign not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/campaigns/{id}/close": {
+            "post": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Close a campaign",
+                "operationId": "321ccbcff0518b671d93282b4277288b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Campaign ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campaign closed or cancelled"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/campaigns/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Cancel a campaign",
+                "operationId": "e413db69419740dd427c16eb323f0b96",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Campaign ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campaign cancelled"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/campaigns/{campaignId}/finalize": {
+            "post": {
+                "tags": [
+                    "Campaigns"
+                ],
+                "summary": "Finalize a campaign and create a loan",
+                "operationId": "413c1d60e9b1b5f1db94297ecdff6eb1",
+                "parameters": [
+                    {
+                        "name": "campaignId",
+                        "in": "path",
+                        "description": "Campaign ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campaign finalized and loan created"
+                    },
+                    "400": {
+                        "description": "Campaign not fully funded"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/investment-account": {
+            "get": {
+                "tags": [
+                    "Investment Accounts"
+                ],
+                "summary": "Get the authenticated user's investment account details",
+                "operationId": "1ae4fcd7fe5f83f3e0db063abcd43b6a",
+                "responses": {
+                    "200": {
+                        "description": "Investment account details retrieved"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/investment-account/top-up": {
+            "post": {
+                "tags": [
+                    "Investment Accounts"
+                ],
+                "summary": "Top up the investment account",
+                "operationId": "53daedfd5bd87ffd9720a11c34233a50",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "example": 100
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Investment account topped up successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/investment-account/withdraw": {
+            "post": {
+                "tags": [
+                    "Investment Accounts"
+                ],
+                "summary": "Withdraw funds from the investment account",
+                "operationId": "fc47796c50424c67d526cda1d4e41b10",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "example": 50
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Funds withdrawn successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "400": {
+                        "description": "Insufficient funds"
+                    },
+                    "404": {
+                        "description": "Investment account not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/investment-account/transactions": {
+            "get": {
+                "tags": [
+                    "Investment Accounts"
+                ],
+                "summary": "List the last 10 transactions of the investment account",
+                "operationId": "b8a36c19b7b8aca4fb6f5ad88b650c1a",
+                "responses": {
+                    "200": {
+                        "description": "List of transactions retrieved"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/campaigns/{campaignId}/invest": {
+            "post": {
+                "tags": [
+                    "Investments"
+                ],
+                "summary": "Invest in a campaign",
+                "operationId": "0e1ce92c79862db8034d49cabaf923cc",
+                "parameters": [
+                    {
+                        "name": "campaignId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount",
+                                    "interest_rate"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer",
+                                        "example": 1000
+                                    },
+                                    "interest_rate": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 5.5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Investment successfully made"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "400": {
+                        "description": "Insufficient funds or other error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/investments": {
+            "get": {
+                "tags": [
+                    "Investments"
+                ],
+                "summary": "List the investments of the authenticated user",
+                "operationId": "b03d5b0b52a7eef15fa82f549f346632",
+                "responses": {
+                    "200": {
+                        "description": "List of investments retrieved"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/campaigns/{campaignId}/investments": {
+            "get": {
+                "tags": [
+                    "Investments"
+                ],
+                "summary": "List investments for a specific campaign",
+                "operationId": "7a1bc058b96d6f2ed9f53febab36de8c",
+                "parameters": [
+                    {
+                        "name": "campaignId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of investments retrieved"
+                    },
+                    "404": {
+                        "description": "Campaign not found"
+                    }
+                }
+            }
+        },
+        "/api/investments/{investmentId}/cancel": {
+            "post": {
+                "tags": [
+                    "Investments"
+                ],
+                "summary": "Cancel an investment",
+                "operationId": "fd011496ea1863be9075ea3b8df54df8",
+                "parameters": [
+                    {
+                        "name": "investmentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Investment cancelled successfully"
+                    },
+                    "400": {
+                        "description": "Invalid state or already cancelled"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Register a new user",
+                "operationId": "2f25885f3b6f61ca11724ec302d2e439",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "first_name",
+                                    "last_name",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Login a user and generate a token",
+                "operationId": "0fc9610184083ac6dddab2c63139225a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful, token returned"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Logout a user and revoke the authentication token",
+                "operationId": "67d5147477c548bfbc3f982833bbc7bd",
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Campaigns",
+            "description": "API Endpoints for managing campaigns"
+        },
+        {
+            "name": "Investment Accounts",
+            "description": "API Endpoints for managing investment accounts"
+        },
+        {
+            "name": "Investments",
+            "description": "API Endpoints for managing investments"
+        },
+        {
+            "name": "Users",
+            "description": "API Endpoints for user management"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "passport": {
+                "type": "oauth2",
+                "description": "Laravel Passport OAuth2 security.",
+                "in": "header",
+                "scheme": "https",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://localhost/oauth/authorize",
+                        "tokenUrl": "http://localhost/oauth/token",
+                        "refreshUrl": "http://localhost/token/refresh",
+                        "scopes": []
+                    }
+                }
+            },
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        {
+            "passport": []
+        }
+    ]
+}
